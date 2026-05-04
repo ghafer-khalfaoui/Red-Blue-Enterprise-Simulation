@@ -1,4 +1,4 @@
-Full-Lifecycle Web Application Attack & Defense Lab
+# 🛡️ Full-Lifecycle Web Application Attack & Defense Lab
 
 Welcome to the Red/Blue Enterprise Simulation Lab! This project is a fully self-contained cybersecurity simulation designed to run on a single Kali Linux virtual machine. 
 
@@ -9,6 +9,7 @@ To run this lab locally, you will need:
 * A Kali Linux VM (or any Debian-based Linux distro)
 * Apache2 and PHP installed (`sudo apt install apache2 php`)
 * Docker installed (`sudo apt install docker.io`)
+* SQLite3 installed (`sudo apt install sqlite3`)
 
 ---
 
@@ -22,17 +23,26 @@ First, we need to spin up the vulnerable application and our containerized SIEM 
    sudo git clone [https://github.com/ghafer-khalfaoui/Red-Blue-Enterprise-Simulation.git](https://github.com/ghafer-khalfaoui/Red-Blue-Enterprise-Simulation.git) /var/www/html/corpnet
    cd /var/www/html/corpnet
 Revert to the vulnerable baseline:
-
+(Note: The main branch contains the secure, patched code. To play the lab, you must checkout the initial vulnerable commit).
 
 Bash
 sudo git checkout $(git rev-list --max-parents=0 HEAD)
-Prepare the log files for the SIEM:
+Prepare the logs, folders, and databases for the lab:
 
 Bash
+# Prepare Splunk log files
 sudo touch /var/log/apache2/access.log
 sudo touch /root/.bash_history
 sudo chmod 755 /var/log/apache2
 sudo chmod 644 /var/log/apache2/access.log
+
+# Create the uploads directory and give Apache permission to write to it
+sudo mkdir -p /var/www/html/corpnet/uploads
+sudo chmod 777 /var/www/html/corpnet/uploads
+
+# Generate the vulnerable SQLite database for the SQLi attack
+sqlite3 /tmp/payroll.db "CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT, salary TEXT); INSERT INTO users (id, username, salary) VALUES (1, 'admin', '\$150,000'), (2, 'omar', '\$85,000');"
+sudo chmod 666 /tmp/payroll.db
 Deploy the Splunk SIEM via Docker:
 
 Bash
@@ -92,3 +102,4 @@ SQLite3 Prepared Statements (sqli.php)
 Re-Exploitation: Try running your Phase 2 attacks again. They will all fail securely!
 
 Created as a comprehensive cybersecurity capstone project covering the entire attack and defense lifecycle.
+
