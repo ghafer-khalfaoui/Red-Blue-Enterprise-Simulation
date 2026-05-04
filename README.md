@@ -20,7 +20,7 @@ First, we need to download the code and set up the vulnerable environment and ou
 
 1. **Clone the repository:**
    ```bash
-   sudo git clone [https://github.com/ghafer-khalfaoui/red-blue-enterprise-simulation.git](https://github.com/ghafer-khalfaoui/red-blue-enterprise-simulation.git) /var/www/html/corpnet
+   sudo git clone https://github.com/ghafer-khalfaoui/red-blue-enterprise-simulation.git /var/www/html/corpnet
    cd /var/www/html/corpnet
 Switch to the vulnerable branch!
 (By default, GitHub shows the secure main branch. To start the lab, you MUST switch to the hackable version).
